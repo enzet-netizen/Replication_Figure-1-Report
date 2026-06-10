@@ -130,7 +130,7 @@ SM §S2.1：α 由混合分布的极大似然估计得到,we define α₀ = 0.1 
 
 ---
 
-## 7.计算 α
+## 7.构建panel
 
 #### input文件：disambig_clean.csv, alpha_scores.csv, arxiv_clean.csv
 #### 运行文件：build_panel.py
