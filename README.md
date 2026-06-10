@@ -87,7 +87,7 @@ ThreadPoolExecutor 并发 CONCURRENCY = 5（自行定义）；断点续跑（启
 逐行读取 Step 1 的要点，调用 GPT，结果保存 id、month、original、rewritten。
 
 #### input文件：step1_bullets_new.jsonl
-#### 运行文件：rewrite_step2_expand.py
+#### 运行文件：rewrite_step2.py
 #### output文件：rewritten_abstracts_new.jsonl
 
 prompt：
