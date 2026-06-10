@@ -6,7 +6,7 @@ import os
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import threading
 
-API_KEY = os.environ.get("")
+API_KEY = ''
 INPUT_FILE = 'human_corpus.csv'
 OUTPUT_FILE = 'step1_bullets_new.jsonl'
 CONCURRENCY = 5
