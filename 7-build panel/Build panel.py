@@ -1,22 +1,24 @@
 import pandas as pd
 import numpy as np
 from collections import defaultdict
+import os
 
 DISAMBIG = 'disambig_clean.csv'
-ALPHA = 'alpha_scores.csv'
-ARXIV = 'arxiv_clean.csv'
-OUTPUT = '/panel.csv'
+ALPHA    = 'alpha_scores.csv'
+ARXIV    = 'arxiv_clean.csv'
+OUTPUT   = 'panel.csv'
 
 np.random.seed(42)
 PRE_START, PRE_END = '2018-01', '2021-12'
 OBS_START, OBS_END = '2022-01', '2024-06'
 
+all_months = pd.period_range('2018-01', '2024-06', freq='M').astype(str).tolist()
+m2i = {m: i for i, m in enumerate(all_months)}
+
 arxiv = pd.read_csv(ARXIV, usecols=['arxiv_id', 'pub_month'], dtype={'arxiv_id': str})
-arxiv['arxiv_id'] = arxiv['arxiv_id'].astype(str)
 date_map = dict(zip(arxiv['arxiv_id'], arxiv['pub_month']))
 
 alpha = pd.read_csv(ALPHA, dtype={'id': str})
-alpha['id'] = alpha['id'].astype(str)
 llm_map = dict(zip(alpha['id'], alpha['is_llm']))
 
 dis = pd.read_csv(DISAMBIG, dtype=str).fillna('')
@@ -34,13 +36,8 @@ for r in dis.itertuples():
         records.append((author_id, pid, month))
 
 incumbents = {a for a, c in incumbent_count.items() if c >= 4}
+records = [(a, pid, m) for (a, pid, m) in records if a in incumbents]
 print(f"Incumbent authors: {len(incumbents):,}")
-
-filtered_records = []
-for a, pid, m in records:
-    if a in incumbents:
-        filtered_records.append((a, pid, m))
-records = filtered_records
 
 first_llm_month = {}
 ever_llm = set()
@@ -55,6 +52,12 @@ treated_authors = set(first_llm_month.keys())
 control_authors = incumbents - ever_llm
 print(f"Treated: {len(treated_authors):,} | Control: {len(control_authors):,}")
 
+control_list = list(control_authors)
+placebo_months = pd.period_range('2023-01', '2024-06', freq='M').astype(str).tolist()
+drawn = np.random.choice(placebo_months, size=len(control_list))
+for a, c in zip(control_list, drawn):
+    first_llm_month[a] = c
+
 count_map = defaultdict(int)
 seen = set()
 for a, pid, m in records:
@@ -65,36 +68,30 @@ for a, pid, m in records:
         count_map[(a, m)] += 1
 
 obs_months = pd.period_range(OBS_START, OBS_END, freq='M').astype(str).tolist()
-control_pool = list(control_authors)
-n_controls = 5
+keep_authors = treated_authors | control_authors
 
-stacked_rows = []
-for treated_author in treated_authors:
-    event_month = first_llm_month[treated_author]
-    chosen_controls = np.random.choice(control_pool, size=min(n_controls, len(control_pool)), replace=False)
-    cohort_authors = [treated_author] + list(chosen_controls)
-    for auth in cohort_authors:
-        is_treated = 1 if auth == treated_author else 0
-        for m in obs_months:
-            rel = int((pd.Period(m, freq='M') - pd.Period(event_month, freq='M')).n)
-            if not (-12 <= rel <= 18) or rel == 0:
-                continue
-            stacked_rows.append({
-                'hashed_author': auth,
-                'monthly_productivity': count_map.get((auth, m), 0),
-                'month': m,
-                'cohort': event_month,
-                'rel_month': rel,
-                'treated': is_treated,
-            })
+panel_rows = []
+for a in keep_authors:
+    treated = 1 if a in treated_authors else 0
+    ev_idx = m2i[first_llm_month[a]]
+    for m in obs_months:
+        rel = m2i[m] - ev_idx
+        if not (-12 <= rel <= 18) or rel == 0:
+            continue
+        panel_rows.append({
+            'hashed_author':        a,
+            'monthly_productivity': count_map.get((a, m), 0),
+            'month':                m,
+            'cohort':               first_llm_month[a],
+            'rel_month':            rel,
+            'treated':              treated,
+        })
 
-panel = pd.DataFrame(stacked_rows)
+panel = pd.DataFrame(panel_rows)
 
-pre_months = list(range(2, 13))
-post_months = list(range(1, 19))
-for k in pre_months:
-    panel[f"rel_month_pre_{str(k).zfill(2)}_treated"] = ((panel['rel_month'] == -k) & (panel['treated'] == 1)).astype(int)
-for k in post_months:
+for k in range(2, 13):
+    panel[f"rel_month_pre_{str(k).zfill(2)}_treated"]  = ((panel['rel_month'] == -k) & (panel['treated'] == 1)).astype(int)
+for k in range(1, 19):
     panel[f"rel_month_post_{str(k).zfill(2)}_treated"] = ((panel['rel_month'] == k) & (panel['treated'] == 1)).astype(int)
 
 panel.to_csv(OUTPUT, index=False)
