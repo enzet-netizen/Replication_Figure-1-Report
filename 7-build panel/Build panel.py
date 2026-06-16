@@ -11,12 +11,11 @@ np.random.seed(42)
 PRE_START, PRE_END = '2018-01', '2021-12'
 OBS_START, OBS_END = '2022-01', '2024-06'
 
-
-arxiv = pd.read_csv(ARXIV, usecols=['arxiv_id', 'pub_month'])
+arxiv = pd.read_csv(ARXIV, usecols=['arxiv_id', 'pub_month'], dtype={'arxiv_id': str})
 arxiv['arxiv_id'] = arxiv['arxiv_id'].astype(str)
 date_map = dict(zip(arxiv['arxiv_id'], arxiv['pub_month']))
 
-alpha = pd.read_csv(ALPHA)
+alpha = pd.read_csv(ALPHA, dtype={'id': str})
 alpha['id'] = alpha['id'].astype(str)
 llm_map = dict(zip(alpha['id'], alpha['is_llm']))
 
