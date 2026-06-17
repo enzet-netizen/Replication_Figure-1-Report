@@ -167,5 +167,6 @@ Hope this clarifies the design. We’re also aware of other groups that have ind
 #### input文件：coefs_stata.csv
 #### 运行文件：plot.do
 #### output文件：fig1.pdf
+<img width="1475" height="870" alt="image" src="https://github.com/user-attachments/assets/606dd62b-012c-493f-95e8-57874016087a" />
 
 
