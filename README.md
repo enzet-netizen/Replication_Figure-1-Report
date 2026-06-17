@@ -136,6 +136,12 @@ SM §S2.1：α 由混合分布的极大似然估计得到,we define α₀ = 0.1 
 #### 运行文件：build_panel.py
 #### output文件：panel.csv
 
+作者email:
+"Active periods: see S2.3 “For each author, we track the number of preprints they posted each month,” so the panel is not conditioned on active publication periods.
+Control construction: see S2.4 “Each author in this group is assigned a unique event time,” so control observations are not reused.
+Hope this clarifies the design. We’re also aware of other groups that have independently replicated the pattern without clear pre-trends, following the paper and SM."
+
+
 | # | 实现 | 原文 |
 |---|---|---|
 | 1 | incumbent = 2018-01~2021-12 发文 ≥4 篇 | S2.3 "researchers with at least 4 works published between 2018 and 2021" |
