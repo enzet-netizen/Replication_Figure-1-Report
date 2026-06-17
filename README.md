@@ -165,7 +165,7 @@ Hope this clarifies the design. We’re also aware of other groups that have ind
 
 ## 8.生图
 #### input文件：coefs_stata.csv
-#### 运行文件：rplot.do
+#### 运行文件：plot.do
 #### output文件：fig1.pdf
 
 
