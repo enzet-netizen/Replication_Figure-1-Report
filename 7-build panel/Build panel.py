@@ -66,8 +66,8 @@ for a, pid, m in records:
         count_map[(a, m)] += 1
 
 obs_months = pd.period_range(OBS_START, OBS_END, freq='M').astype(str).tolist()
-
 keep_authors = treated_authors | control_authors
+
 panel_rows = []
 for a in keep_authors:
     treated = 1 if a in treated_authors else 0
@@ -86,6 +86,9 @@ for a in keep_authors:
         })
 
 panel = pd.DataFrame(panel_rows)
+panel['author_id'] = panel['hashed_author'].astype('category').cat.codes + 1
+panel['cohort_id'] = panel['cohort'].astype('category').cat.codes + 1
+panel['month_id']  = panel['month'].astype('category').cat.codes + 1
 for k in range(2, 13):
     panel[f"rel_month_pre_{str(k).zfill(2)}_treated"]  = ((panel['rel_month'] == -k) & (panel['treated'] == 1)).astype(int)
 for k in range(1, 19):
