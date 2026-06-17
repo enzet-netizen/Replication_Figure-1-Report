@@ -160,3 +160,6 @@ Hope this clarifies the design. We’re also aware of other groups that have ind
 #### input文件：panel.csv
 #### 运行文件：regression plot.do
 #### output文件：fig1A_productivity.pdf
+
+<img width="808" height="475" alt="image" src="https://github.com/user-attachments/assets/dcdec330-53fa-48b4-844b-b79f5cff7651" />
+
