@@ -2,22 +2,6 @@ import delimited "panel.csv", clear
 
 quietly ppmlhdfe monthly_productivity rel_month_p*, absorb(author_id cohort_id##month_id rel_month) vce(cluster author_id)
 
-matrix b = e(b)
-matrix V = e(V)
-local names : colnames b
-tempname memhold
-postfile `memhold' str40 coef double estimate double se using ///
-    "coefs_stata.dta", replace
-local k = 1
-foreach name of local names {
-    local est = b[1, `k']
-    local stderr = sqrt(V[`k', `k'])
-    post `memhold' ("`name'") (`est') (`stderr')
-    local k = `k' + 1
-}
-postclose `memhold'
-display "Saved: coefs_stata.csv"
-
 coefplot , ///
     keep( ///
         rel_month_pre_12_treated rel_month_pre_11_treated rel_month_pre_10_treated ///
