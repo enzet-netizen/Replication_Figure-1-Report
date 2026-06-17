@@ -17,10 +17,8 @@ m2i = {m: i for i, m in enumerate(all_months)}
 
 arxiv = pd.read_csv(ARXIV, usecols=['arxiv_id', 'pub_month'], dtype={'arxiv_id': str})
 date_map = dict(zip(arxiv['arxiv_id'], arxiv['pub_month']))
-
 alpha = pd.read_csv(ALPHA, dtype={'id': str})
 llm_map = dict(zip(alpha['id'], alpha['is_llm']))
-
 dis = pd.read_csv(DISAMBIG, dtype=str).fillna('')
 
 records = []
@@ -68,8 +66,8 @@ for a, pid, m in records:
         count_map[(a, m)] += 1
 
 obs_months = pd.period_range(OBS_START, OBS_END, freq='M').astype(str).tolist()
-keep_authors = treated_authors | control_authors
 
+keep_authors = treated_authors | control_authors
 panel_rows = []
 for a in keep_authors:
     treated = 1 if a in treated_authors else 0
@@ -88,7 +86,6 @@ for a in keep_authors:
         })
 
 panel = pd.DataFrame(panel_rows)
-
 for k in range(2, 13):
     panel[f"rel_month_pre_{str(k).zfill(2)}_treated"]  = ((panel['rel_month'] == -k) & (panel['treated'] == 1)).astype(int)
 for k in range(1, 19):
