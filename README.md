@@ -154,19 +154,9 @@ Hope this clarifies the design. We’re also aware of other groups that have ind
 
 ---
 
-## 8.回归
-S3.1 —— y_it ~ Poisson(α_i + λ_t + Σ_{k≠−1} γ_k D^k Treated_i + Σ_{k≠−1} β_k D^k)，"we introduce α_i, fixed effect terms for author i, and λ_t, fixed effect terms for time period t"，"we estimate the dynamic coefficients of interest using a Poisson regression
+## 8.回归和生图
+作者提供回归和生图代码：https://figshare.com/articles/dataset/Scientific_production_in_the_era_of_Large_Language_Models/30359437
+
 #### input文件：panel.csv
-#### 运行文件：run_regression.py
-#### output文件：coefs.csv
-
-因变量 monthly_productivity；自变量为 29 个 τ×Treated 虚拟变量（对应 γ_k）加 C(rel_month)（事件时间主效应，对应 β_k），固定效应只有 hashed_author（α_i）和 month（λ_t）两个
-
----
-
-## 9.生图
-作者提供生图代码：https://figshare.com/articles/dataset/Scientific_production_in_the_era_of_Large_Language_Models/30359437
-但之前在stat上发现运行效果与直接在python运行相同，故直接使用python进行试验
-#### input文件：coefs.csv
-#### 运行文件：plot.py
-#### output文件：fig1.png
+#### 运行文件：regression plot.do
+#### output文件：fig1A_productivity.pdf
