@@ -7,7 +7,7 @@ matrix V = e(V)
 local names : colnames b
 tempname memhold
 postfile `memhold' str40 coef double estimate double se using ///
-    "coefs_stata.csv", replace
+    "coefs_stata.dta", replace
 local k = 1
 foreach name of local names {
     local est = b[1, `k']
