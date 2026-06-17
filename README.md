@@ -154,12 +154,18 @@ Hope this clarifies the design. We’re also aware of other groups that have ind
 
 ---
 
-## 8.回归和生图
+## 8.回归
 作者提供回归和生图代码：https://figshare.com/articles/dataset/Scientific_production_in_the_era_of_Large_Language_Models/30359437
 
 #### input文件：panel.csv
-#### 运行文件：regression plot.do
-#### output文件：fig1A_productivity.pdf
+#### 运行文件：regression.do
+#### output文件：fig1A_productivity.pdf，coefs_stata.csv
 
 <img width="808" height="475" alt="image" src="https://github.com/user-attachments/assets/dcdec330-53fa-48b4-844b-b79f5cff7651" />
+
+## 8.生图
+#### input文件：coefs_stata.csv
+#### 运行文件：rplot.do
+#### output文件：fig1.pdf
+
 
