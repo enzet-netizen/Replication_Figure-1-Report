@@ -2,15 +2,15 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-COEFS  = 'coefs_stata.csv'
+COEFS  = 'coefs_stata.dta'
 OUTPUT = 'fig1.png'
 
 ORANGE ='#E87D3E'  
 
-coefs = pd.read_csv(COEFS)
+coefs = pd.read_stata(COEFS)
 col_name = coefs.columns[0]
-col_est  = 'Estimate'
-col_se   = 'Std. Error'
+col_est  = 'estimate'
+col_se   = 'se'
 
 rows = []
 for _, r in coefs.iterrows():
@@ -66,4 +66,3 @@ ax.spines['right'].set_visible(False)
 
 plt.tight_layout()
 plt.savefig(OUTPUT, dpi=300, bbox_inches='tight')
-
